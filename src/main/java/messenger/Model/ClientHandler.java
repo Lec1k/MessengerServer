@@ -19,7 +19,11 @@ public class ClientHandler extends  Thread {
     DataOutputStream dos;
     String username;
 
-    public ClientHandler(String usr,Socket sc){
+    public String getUsername() {
+        return username;
+    }
+
+    public ClientHandler(String usr, Socket sc){
 
         sock= sc;
         try{

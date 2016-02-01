@@ -7,6 +7,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 import javafx.stage.Stage;
 import messenger.Model.ChatServer;
+import messenger.Model.ClientHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -30,6 +31,8 @@ public class OnlineUsersController  {
     }
     @FXML
     private void initialize(){
-        onlineUsersTextAera.setText(ChatServer.online.toString());
+        for(ClientHandler ch: ChatServer.online){
+            onlineUsersTextAera.appendText(ch.getUsername());
+        }
     }
 }
