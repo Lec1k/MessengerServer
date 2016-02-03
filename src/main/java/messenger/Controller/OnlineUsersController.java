@@ -32,7 +32,7 @@ public class OnlineUsersController  {
     @FXML
     private void initialize(){
         for(ClientHandler ch: ChatServer.online){
-            onlineUsersTextAera.appendText(ch.getUsername());
+            onlineUsersTextAera.appendText(ch.getUsername()+'\n');
         }
     }
 }

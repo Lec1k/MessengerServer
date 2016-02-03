@@ -37,14 +37,41 @@ public class ClientHandler extends  Thread {
 
     }
 
-    public void run(){
+    public void sendMsg(String msg){
         try{
-            while (true){
-                String listen = dis.readUTF();
+            dos.writeUTF(msg);
+            dos.flush();
+            LOG.info(this.getUsername() + " sent message " + msg);
+        }
+        catch (Exception e){
+            LOG.warn("",e);
+        }
+    }
+
+    public void sendAll(String msg){
+        try{
+            for(int i = 0;i<ChatServer.online.size();i++){
+                ClientHandler ch = ChatServer.online.get(i);
+                ch.sendMsg(username + ": " + msg);
             }
         }
         catch (Exception e){
             LOG.warn("",e);
+        }
+    }
+
+    public void run(){
+        sendAll(" Joined chat");
+        try{
+            while (true){
+                String listen = dis.readUTF();
+                listen = listen.trim();
+                sendAll(listen);
+            }
+        }
+        catch (Exception e){
+            LOG.warn("",e);
+
         }
     }
 

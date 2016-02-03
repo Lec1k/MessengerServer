@@ -33,6 +33,7 @@ public class SocketHandler extends Thread {
     public void check(){
         try {
             usr = dis.readUTF();
+            dos.writeUTF("Connected");
             LOG.info( usr + " connected");
         }
         catch (Exception e){
