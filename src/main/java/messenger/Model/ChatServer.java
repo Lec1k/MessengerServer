@@ -1,5 +1,6 @@
 package messenger.Model;
 
+import messenger.Controller.MainController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -19,7 +20,8 @@ public class ChatServer implements Runnable {
     public ChatServer(){
         try {
             ss = new ServerSocket(8881);
-            LOG.info("Listening to port 5000");
+            MainController.appendLog("Listening to port 8881...\n");
+            LOG.info("Listening to port 8881");
             online = new Vector<ClientHandler>();
         }
         catch (Exception e){
@@ -32,6 +34,7 @@ public class ChatServer implements Runnable {
             while (true){
                 skt = ss.accept();
                 SocketHandler sh = new SocketHandler(skt);
+                MainController.appendLog("Client accepted \n");
                 LOG.info("Client accepted");
                 sh.start();
             }
@@ -39,6 +42,21 @@ public class ChatServer implements Runnable {
         catch (Exception e ){
             LOG.warn("",e);
         }
+    }
+
+    public void stopServer(){
+        try{
+            ss.close();
+            MainController.appendLog("Server closed...\n");
+            for(ClientHandler ch:online){
+                ch.stopClientHandler();
+            }
+        }
+        catch (Exception e){
+            LOG.warn("",e);
+        }
+        skt=null;
+        ss=null;
     }
 
     @Override

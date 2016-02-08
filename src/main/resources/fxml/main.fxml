@@ -12,7 +12,7 @@
             <Button fx:id="endButton" layoutX="28.0" layoutY="359.0" mnemonicParsing="false" onAction="#onEndButtonClick" prefHeight="25.0" prefWidth="83.0" text="End" />
             <Button fx:id="clearButton" layoutX="191.0" layoutY="320.0" mnemonicParsing="false" onAction="#onClearButtonClick" prefHeight="25.0" prefWidth="83.0" text="Clear" />
             <Button fx:id="onlineUsersButton" layoutX="191.0" layoutY="359.0" mnemonicParsing="false" onAction="#onOnlineUsersButtonClick" prefHeight="25.0" prefWidth="83.0" text="Users Online" />
-            <TextArea fx:id="logsTextAera" editable="false" layoutX="28.0" layoutY="26.0" prefHeight="286.0" prefWidth="246.0" />
+            <TextArea fx:id="logsTextArea" editable="false" layoutX="28.0" layoutY="26.0" prefHeight="286.0" prefWidth="246.0" />
          </children>
       </Pane>
    </children>

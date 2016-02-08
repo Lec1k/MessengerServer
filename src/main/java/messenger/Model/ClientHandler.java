@@ -1,5 +1,6 @@
 package messenger.Model;
 
+import messenger.Controller.MainController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -41,7 +42,8 @@ public class ClientHandler extends  Thread {
         try{
             dos.writeUTF(msg);
             dos.flush();
-            LOG.info(this.getUsername() + " sent message " + msg);
+            MainController.appendLog("Client message::::" + msg + '\n');
+            LOG.info("Client message::::" + msg);
         }
         catch (Exception e){
             LOG.warn("",e);
@@ -60,6 +62,18 @@ public class ClientHandler extends  Thread {
         }
     }
 
+    public void stopClientHandler(){
+        try {
+            sock.close();
+            dis.close();
+            dos.close();
+            ChatServer.online.remove(this);
+        }
+        catch (Exception e){
+            LOG.warn("",e);
+        }
+    }
+
     public void run(){
         sendAll(" Joined chat");
         try{
@@ -70,6 +84,14 @@ public class ClientHandler extends  Thread {
             }
         }
         catch (Exception e){
+            MainController.appendLog("Client lost connection: " + username + '\n');
+            sendAll(" has left the chat");
+            for(ClientHandler ch : ChatServer.online){
+                if(ch.getUsername().equalsIgnoreCase(username)){
+                    ChatServer.online.remove(ch);
+                    break;
+                }
+            }
             LOG.warn("",e);
 
         }

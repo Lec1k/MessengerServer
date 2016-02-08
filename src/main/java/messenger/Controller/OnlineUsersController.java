@@ -31,7 +31,11 @@ public class OnlineUsersController  {
     }
     @FXML
     private void initialize(){
+        if(ChatServer.online.size()==0){
+            onlineUsersTextAera.appendText("There is no users online.");
+        }
         for(ClientHandler ch: ChatServer.online){
+
             onlineUsersTextAera.appendText(ch.getUsername()+'\n');
         }
     }

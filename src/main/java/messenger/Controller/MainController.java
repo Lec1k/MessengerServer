@@ -1,25 +1,28 @@
 package messenger.Controller;
 
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 import messenger.Model.ChatServer;
+import messenger.Model.ServerSettings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.DataInputStream;
-import java.net.Socket;
+import java.net.URL;
+import java.util.ResourceBundle;
 
 import static messenger.View.OnlineUsersView.showOnlineUsers;
 
-public class MainController {
+public class MainController implements Initializable {
     private static final Logger log = LoggerFactory.getLogger(MainController.class);
+    public static TextArea logs;
 
     Thread serverThread;
     ChatServer mainServer;
 
     @FXML
-    private TextArea logsTextAera;
+    private TextArea logsTextArea;
     @FXML
     private Button clearButton;
     @FXML
@@ -29,9 +32,11 @@ public class MainController {
     @FXML
     private Button onlineUsersButton;
 
+
+
     @FXML
     private void onClearButtonClick() {
-        logsTextAera.clear();
+        logsTextArea.clear();
 
     }
 
@@ -40,10 +45,15 @@ public class MainController {
         mainServer = new ChatServer();
         serverThread = new Thread(mainServer);
         serverThread.start();
+        startButton.setVisible(false);
     }
 
     @FXML
     private void onEndButtonClick() {
+        serverThread.interrupt();
+        serverThread = null;
+        mainServer.stopServer();
+        startButton.setVisible(true);
 
     }
 
@@ -53,7 +63,12 @@ public class MainController {
         showOnlineUsers();
     }
 
-    public void appendLog(String s){
-        logsTextAera.appendText(s);
+    public static void  appendLog(String s){
+        ServerSettings.textArea.appendText(s);
+    }
+
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+        ServerSettings.textArea = logsTextArea;
     }
 }

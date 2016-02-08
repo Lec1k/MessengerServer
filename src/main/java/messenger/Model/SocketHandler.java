@@ -34,6 +34,7 @@ public class SocketHandler extends Thread {
         try {
             usr = dis.readUTF();
             dos.writeUTF("Connected");
+            MainController.appendLog(usr + " connected" + '\n');
             LOG.info( usr + " connected");
         }
         catch (Exception e){
