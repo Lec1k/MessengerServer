@@ -8,9 +8,6 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.net.Socket;
 
-/**
- * Created by LeC1K on 01.02.2016.
- */
 public class SocketHandler extends Thread {
 
     private static final Logger LOG = LoggerFactory.getLogger(SocketHandler.class);
@@ -19,31 +16,30 @@ public class SocketHandler extends Thread {
     DataOutputStream dos;
     String usr;
 
-    public SocketHandler(Socket sock){
+    public SocketHandler(Socket sock) {
         try {
             sc = sock;
             dis = new DataInputStream(sc.getInputStream());
             dos = new DataOutputStream(sc.getOutputStream());
-        }
-        catch (Exception e){
-            LOG.warn("",e);
+        } catch (Exception e) {
+            LOG.warn("", e);
         }
     }
 
-    public void check(){
+    public void check() {
         try {
             usr = dis.readUTF();
             dos.writeUTF("Connected");
             MainController.appendLog(usr + " connected" + '\n');
-            LOG.info( usr + " connected");
-        }
-        catch (Exception e){
-            LOG.warn("",e);
+            LOG.info(usr + " connected");
+        } catch (Exception e) {
+            LOG.warn("", e);
         }
     }
-    public void  run(){
+
+    public void run() {
         check();
-        ClientHandler clientHandler = new ClientHandler(usr,sc);
+        ClientHandler clientHandler = new ClientHandler(usr, sc);
         ChatServer.online.add(clientHandler);
         clientHandler.start();
     }

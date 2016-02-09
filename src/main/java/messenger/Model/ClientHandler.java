@@ -8,10 +8,8 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.net.Socket;
 
-/**
- * Created by LeC1K on 01.02.2016.
- */
-public class ClientHandler extends  Thread {
+
+public class ClientHandler extends Thread {
 
 
     private static final Logger LOG = LoggerFactory.getLogger(ClientHandler.class);
@@ -24,78 +22,87 @@ public class ClientHandler extends  Thread {
         return username;
     }
 
-    public ClientHandler(String usr, Socket sc){
+    public ClientHandler(String usr, Socket sc) {
 
-        sock= sc;
-        try{
+        sock = sc;
+        try {
             dis = new DataInputStream(sock.getInputStream());
             dos = new DataOutputStream(sock.getOutputStream());
             username = usr;
-        }
-        catch (Exception e){
-            LOG.warn("",e);
+        } catch (Exception e) {
+            LOG.warn("", e);
         }
 
     }
 
-    public void sendMsg(String msg){
-        try{
+    public void sendMsg(String msg) {
+        try {
             dos.writeUTF(msg);
             dos.flush();
+            onlineUsers();
             MainController.appendLog("Client message::::" + msg + '\n');
             LOG.info("Client message::::" + msg);
-        }
-        catch (Exception e){
-            LOG.warn("",e);
+        } catch (Exception e) {
+            LOG.warn("", e);
         }
     }
 
-    public void sendAll(String msg){
-        try{
-            for(int i = 0;i<ChatServer.online.size();i++){
+    public void sendAll(String msg) {
+        try {
+            for (int i = 0; i < ChatServer.online.size(); i++) {
                 ClientHandler ch = ChatServer.online.get(i);
                 ch.sendMsg(username + ": " + msg);
             }
-        }
-        catch (Exception e){
-            LOG.warn("",e);
+        } catch (Exception e) {
+            LOG.warn("", e);
         }
     }
 
-    public void stopClientHandler(){
+    public void stopClientHandler() {
         try {
             sock.close();
             dis.close();
             dos.close();
             ChatServer.online.remove(this);
-        }
-        catch (Exception e){
-            LOG.warn("",e);
+        } catch (Exception e) {
+            LOG.warn("", e);
         }
     }
 
-    public void run(){
+    public void run() {
         sendAll(" Joined chat");
-        try{
-            while (true){
+        try {
+            while (true) {
                 String listen = dis.readUTF();
                 listen = listen.trim();
                 sendAll(listen);
             }
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             MainController.appendLog("Client lost connection: " + username + '\n');
             sendAll(" has left the chat");
-            for(ClientHandler ch : ChatServer.online){
-                if(ch.getUsername().equalsIgnoreCase(username)){
+            for (ClientHandler ch : ChatServer.online) {
+                if (ch.getUsername().equalsIgnoreCase(username)) {
                     ChatServer.online.remove(ch);
                     break;
                 }
             }
-            LOG.warn("",e);
+            LOG.warn("", e);
 
         }
     }
 
+    public void onlineUsers() {
+        try {
+            String name = "";
+            for (int i = 0; i < ChatServer.online.size(); i++) {
+                ClientHandler handler = ChatServer.online.get(i);
+                name += handler.username + ",";
+            }
+            dos.writeUTF("oNL1n3" + name);
+            dos.flush();
 
+        } catch (Exception e) {
+            LOG.warn("", e);
+        }
+    }
 }
