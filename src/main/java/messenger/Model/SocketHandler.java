@@ -29,7 +29,7 @@ public class SocketHandler extends Thread {
     public void check() {
         try {
             usr = dis.readUTF();
-            dos.writeUTF("Connected");
+            dos.writeUTF("Connected\n\"/commands\" for available list of commands\n\"/p nickname\" for private messages");
             MainController.appendLog(usr + " connected" + '\n');
             LOG.info(usr + " connected");
         } catch (Exception e) {

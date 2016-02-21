@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.net.Socket;
+import java.util.StringTokenizer;
 
 
 public class ClientHandler extends Thread {
@@ -59,6 +60,25 @@ public class ClientHandler extends Thread {
             LOG.warn("");
         }
     }
+    public void sendPrivate(String usr,String msg){
+        try{
+            for(int i =0;i<ChatServer.online.size();i++){
+                ClientHandler ch = ChatServer.online.get(i);
+                String name = ch.getUsername();
+                if(name.equalsIgnoreCase(usr)){
+                    ch.sendMsg(username + ": " + msg);
+                    MainController.appendLog("Client private message::::" + msg + '\n');
+                    dos.writeUTF(username + ": " + msg);
+                    break;
+                }
+            }
+        }
+        catch (Exception e){
+            LOG.warn("",e);
+        }
+    }
+
+
 
     public void stopClientHandler() {
         try {
@@ -78,7 +98,22 @@ public class ClientHandler extends Thread {
             while (true) {
                 String listen = dis.readUTF();
                 listen = listen.trim();
-                sendAll(listen);
+                if (listen.startsWith("/commands")) {
+                    dos.writeUTF("\"/p nickname\" for private messages\n\"/commands\" view commands list");
+                } else {
+                    if (listen.startsWith("/p")) {
+                        String sent = listen.substring(2);
+                        StringTokenizer st = new StringTokenizer(sent, " ");
+                        String name = st.nextToken();
+                        String msg = "";
+                        while (st.hasMoreTokens()) {
+                            msg += " " + st.nextToken();
+                        }
+                        sendPrivate(name, msg);
+                    } else {
+                        sendAll(listen);
+                    }
+                }
             }
         } catch (Exception e) {
             MainController.appendLog("Client lost connection: " + username + '\n');
