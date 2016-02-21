@@ -1,10 +1,12 @@
 package messenger.Controller;
 
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 import messenger.Model.ChatServer;
+import messenger.Model.DisconnectHandler;
 import messenger.Model.ServerSettings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,10 +40,12 @@ public class MainController implements Initializable {
     private void onClearButtonClick() {
         logsTextArea.clear();
 
+
     }
 
     @FXML
     private void onStartButtonClick() {
+
         mainServer = new ChatServer();
         serverThread = new Thread(mainServer);
         serverThread.start();
@@ -54,6 +58,13 @@ public class MainController implements Initializable {
         serverThread = null;
         mainServer.stopServer();
         startButton.setVisible(true);
+        Platform.runLater(new DisconnectHandler());
+
+
+
+//        logsTextArea.setText("Creating new group will restrict all\nincoming requests"
+//                + "from connecting to\nprevious chat room group"
+//                +" and only\nmembers in the same group\ncan communicate together.\n");
 
     }
 

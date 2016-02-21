@@ -35,17 +35,18 @@ public class ChatServer implements Runnable {
                 sh.start();
             }
         } catch (Exception e) {
-            LOG.warn("", e);
+            LOG.warn("Socket closed");
         }
     }
 
     public void stopServer() {
         try {
+//            for (int i=0;i<online.size();i++) {
+//                online.get(i).stopClientHandler();
+//            }
             ss.close();
             MainController.appendLog("Server closed...\n");
-            for (ClientHandler ch : online) {
-                ch.stopClientHandler();
-            }
+
         } catch (Exception e) {
             LOG.warn("", e);
         }
