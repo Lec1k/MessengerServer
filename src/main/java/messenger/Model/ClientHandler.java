@@ -40,10 +40,12 @@ public class ClientHandler extends Thread {
             dos.writeUTF(msg);
             dos.flush();
             onlineUsers();
+            if(!ServerSettings.textArea.getText().contains("Client message::::" + msg + '\n')){
             MainController.appendLog("Client message::::" + msg + '\n');
             LOG.info("Client message::::" + msg);
+            }
         } catch (Exception e) {
-            LOG.warn(username + " lost connection");
+            //LOG.warn(username + " lost connection");
         }
     }
 
@@ -80,6 +82,7 @@ public class ClientHandler extends Thread {
             }
         } catch (Exception e) {
             MainController.appendLog("Client lost connection: " + username + '\n');
+            LOG.warn(username + " lost connection");
             sendAll(" has left the chat");
             for (ClientHandler ch : ChatServer.online) {
                 if (ch.getUsername().equalsIgnoreCase(username)) {
@@ -104,6 +107,6 @@ public class ClientHandler extends Thread {
 
         } catch (Exception e) {
             LOG.warn(username + " lost connection");
-        }
+    }
     }
 }
