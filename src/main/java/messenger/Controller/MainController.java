@@ -49,7 +49,8 @@ public class MainController implements Initializable {
         mainServer = new ChatServer();
         serverThread = new Thread(mainServer);
         serverThread.start();
-        startButton.setVisible(false);
+        startButton.setDisable(true);
+        endButton.setDisable(false);
     }
 
     @FXML
@@ -57,8 +58,9 @@ public class MainController implements Initializable {
         serverThread.interrupt();
         serverThread = null;
         mainServer.stopServer();
-        startButton.setVisible(true);
+        startButton.setDisable(false);
         Platform.runLater(new DisconnectHandler());
+        endButton.setDisable(true);
 
 
 
@@ -81,5 +83,6 @@ public class MainController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         ServerSettings.textArea = logsTextArea;
+        endButton.setDisable(true);
     }
 }
